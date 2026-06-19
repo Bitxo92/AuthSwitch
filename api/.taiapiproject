@@ -1,0 +1,20 @@
+{
+  "name": "authswitch",
+  "namespace": "api",
+  "current_version": "0.1.0",
+  "mode": "development",
+  "auth": {
+    "type": "database",
+    "config": {
+      "expiration": 5,
+      "session_management": true,
+      "password_expiration": false
+    }
+  },
+  "mcp": false,
+  "secret_key_name": "SECRET_KEY",
+  "app_dir": ".",
+  "generated_schemas": [
+    "public"
+  ]
+}
