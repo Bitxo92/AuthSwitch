@@ -6,4 +6,5 @@ enumerations_router = APIRouter(
 )
 
 from .endpoints.GET import permission_type
+from .endpoints.GET import permission_type
 from .endpoints.GET import content_type

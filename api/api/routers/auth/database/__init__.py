@@ -136,6 +136,9 @@ class AuthAsyncAPI:
     @property
     def permission_type(self):
         return EnumModel(name="permission_type", values=['api', 'app'])
+    @property
+    def permission_type(self):
+        return EnumModel(name="permission_type", values=['api', 'app'])
 
 
 # Instancias globales
