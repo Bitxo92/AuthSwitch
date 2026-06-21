@@ -50,7 +50,7 @@ class AuthService {
 
     // get the user info from the API and set it in localStorage
     const user_response = await ApiClient.getLoggedUserInfo(access_token)
-    this.setUserInfo(user_response)
+    this.setUserInfo(user_response!)
   }
 
   async refreshTokens() {
