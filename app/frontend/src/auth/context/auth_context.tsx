@@ -66,6 +66,14 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
     }
   }
 
+  const hasRequiredRole = (requiredRole: string): boolean => {
+    return authService.hasRequiredRole(requiredRole)
+  }
+
+  const hasRequiredPermission = (requiredPermission: string): boolean => {
+    return authService.hasRequiredPermission(requiredPermission)
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -74,6 +82,8 @@ export function AuthProvider({ children }: { children?: ReactNode }) {
         isAuthenticated,
         login,
         logout,
+        hasRequiredRole,
+        hasRequiredPermission,
       }}
     >
       {children}

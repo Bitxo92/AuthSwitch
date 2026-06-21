@@ -6,4 +6,6 @@ export interface AuthContextType {
   loading: boolean
   login: (username: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  hasRequiredRole: (requiredRole: string) => boolean
+  hasRequiredPermission: (requiredPermission: string) => boolean
 }

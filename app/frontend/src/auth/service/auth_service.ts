@@ -69,26 +69,40 @@ class AuthService {
     await ApiClient.logout(accessToken ?? "")
     localStorage.clear()
   }
-}
 
-//Fetch Wrapper that on 401 (Unauthorized) will attempt to refresh the access token and retry the request
-export async function authorizedFetch<TArgs extends unknown[], TReturn>(
-  fn: (...args: TArgs) => Promise<TReturn>,
-  ...args: TArgs
-): Promise<TReturn> {
-  try {
-    return await fn(...args)
-  } catch (error) {
-    if (error instanceof Error && (error as any).response?.status === 401) {
-      try {
-        await authService.refreshTokens()
-        return await fn(...args)
-      } catch {
-        await authService.logoutUser()
-        throw error
+  //Fetch Wrapper that on 401 (Unauthorized) will attempt to refresh the access token and retry the request
+  async authorizedFetch<TArgs extends unknown[], TReturn>(
+    fn: (...args: TArgs) => Promise<TReturn>,
+    ...args: TArgs
+  ): Promise<TReturn> {
+    try {
+      return await fn(...args)
+    } catch (error) {
+      if (error instanceof Error && (error as any).response?.status === 401) {
+        try {
+          await authService.refreshTokens()
+          return await fn(...args)
+        } catch {
+          await authService.logoutUser()
+          throw error
+        }
       }
+      throw error
     }
-    throw error
+  }
+
+  //Auth Helper Methods
+
+  hasRequiredRole(RequiredRole: string): boolean {
+    let user_role: string = this.getUserInfo()?.roles[0] || ""
+
+    return RequiredRole.toLowerCase() === user_role.toLowerCase().trim()
+  }
+
+  hasRequiredPermission(RequiredPermission: string): boolean {
+    let user_permissions = this.getUserInfo()?.permissions || []
+
+    return user_permissions.includes(RequiredPermission)
   }
 }
 
