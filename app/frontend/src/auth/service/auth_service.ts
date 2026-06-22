@@ -1,7 +1,7 @@
 import { ApiClient } from "@/auth/authswitch/index"
 import type { User } from "../types/user"
 
-class AuthService {
+export class AuthService {
   private static instance: AuthService
   private constructor() {}
 
@@ -49,7 +49,7 @@ class AuthService {
     this.setRefreshToken(refresh_token)
 
     // get the user info from the API and set it in localStorage
-    const user_response = await ApiClient.getLoggedUserInfo(access_token)
+    const user_response = await ApiClient.getLoggedUserInfo()
     this.setUserInfo(user_response!)
   }
 
@@ -65,10 +65,7 @@ class AuthService {
   }
 
   async logoutUser() {
-    await ApiClient.logout(
-      this.getAccessToken() ?? "",
-      this.getRefreshToken() ?? ""
-    )
+    await ApiClient.logout(this.getRefreshToken() ?? "")
     localStorage.clear()
   }
 
@@ -93,12 +90,8 @@ class AuthService {
       if (response.status === 401) {
         try {
           await authservice.refreshTokens()
-
-          return await AuthService.authorizedFetch<T>(
-            endpoint_url,
-            method,
-            body
-          )
+          console.log("Access token refreshed. Retrying the request...")
+          return AuthService.authorizedFetch<T>(endpoint_url, method, body)
         } catch {
           await authservice.logoutUser()
           throw new Error("Refresh token expired. Please login again.")
@@ -106,6 +99,9 @@ class AuthService {
       }
 
       const result = await response.json()
+      console.log(
+        "Request retried successfully after refreshing the access token."
+      )
       return result.data as T
     } catch (error) {
       console.error("Network Error:", error)

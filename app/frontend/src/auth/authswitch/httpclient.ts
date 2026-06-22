@@ -2,6 +2,7 @@ import type { LoginResponse } from "@/auth/types/login"
 import type { AuthInterface } from "@/auth//interfaces/auth_interface"
 import type { User } from "@/auth/types/user"
 import type { RefreshResponse } from "../types/refresh"
+import { AuthService } from "@/auth/service/auth_service"
 
 export class AuthHttpClient implements AuthInterface {
   private readonly BASE_URL = "http://localhost:8000"
@@ -36,32 +37,20 @@ export class AuthHttpClient implements AuthInterface {
       })
     return response.data as RefreshResponse
   }
-  async logout(access_token: string, refresh_token: string): Promise<void> {
-    fetch(`${this.BASE_URL}/auth/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify({ refresh_token: refresh_token }),
-    }).catch((error) => {
-      console.error("Network error:", error)
-      throw error
-    })
+  async logout(refresh_token: string): Promise<void> {
+    await AuthService.authorizedFetch<void>(
+      `${this.BASE_URL}/auth/logout`,
+      "POST",
+      {
+        refresh_token,
+      }
+    )
   }
-  async getLoggedUserInfo(access_token: string): Promise<User> {
-    const response = await fetch(`${this.BASE_URL}/auth/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error("Network error:", error)
-        throw error
-      })
-    return response.data as User
+
+  async getLoggedUserInfo(): Promise<User> {
+    return await AuthService.authorizedFetch<User>(
+      `${this.BASE_URL}/auth/me`,
+      "GET"
+    )
   }
 }

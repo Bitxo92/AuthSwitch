@@ -23,21 +23,17 @@ export class MockAuthClient implements AuthInterface {
     return mockRefreshResponse
   }
 
-  async logout(accessToken: string, refreshToken: string): Promise<void> {
-    console.log("MockAuthClient: logout called with accessToken:", accessToken)
+  async logout(refreshToken: string): Promise<void> {
     console.log(
       "MockAuthClient: logout called with refreshToken:",
       refreshToken
     )
+
     localStorage.clear()
     return Promise.resolve()
   }
 
-  async getLoggedUserInfo(accessToken: string): Promise<User | null> {
-    console.log(
-      "MockAuthClient: getLoggedUserInfo called with accessToken:",
-      accessToken
-    )
+  async getLoggedUserInfo(): Promise<User | null> {
     return mockUserResponse
   }
 }
