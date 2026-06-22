@@ -73,26 +73,45 @@ class AuthService {
   }
 
   //Fetch Wrapper that on 401 (Unauthorized) will attempt to refresh the access token and retry the request
-  async authorizedFetch<TArgs extends unknown[], TReturn>(
-    fn: (...args: TArgs) => Promise<TReturn>,
-    ...args: TArgs
-  ): Promise<TReturn> {
+  public static async authorizedFetch<T>(
+    endpoint_url: string,
+    method: string,
+    body?: any
+  ): Promise<T> {
+    const authservice = AuthService.getInstance()
+
     try {
-      return await fn(...args)
-    } catch (error) {
-      if (error instanceof Error && (error as any).response?.status === 401) {
+      const response = await fetch(endpoint_url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authservice.getAccessToken()}`,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      })
+
+      if (response.status === 401) {
         try {
-          await authService.refreshTokens()
-          return await fn(...args)
+          await authservice.refreshTokens()
+
+          return await AuthService.authorizedFetch<T>(
+            endpoint_url,
+            method,
+            body
+          )
         } catch {
-          await authService.logoutUser()
-          throw error
+          await authservice.logoutUser()
+          throw new Error("Refresh token expired. Please login again.")
         }
       }
+
+      const result = await response.json()
+      return result.data as T
+    } catch (error) {
+      console.error("Network Error:", error)
       throw error
     }
   }
-
   //Auth Helper Methods
 
   hasRequiredRole(RequiredRole: string): boolean {
