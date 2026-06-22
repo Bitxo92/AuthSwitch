@@ -5,6 +5,6 @@ import type { User } from "../types/user"
 export interface AuthInterface {
   login: (username: string, password: string) => Promise<LoginResponse>
   refreshToken: (refreshToken: string) => Promise<RefreshResponse>
-  logout: (accessToken: string) => void
+  logout: (accessToken: string, refreshToken: string) => void
   getLoggedUserInfo: (accessToken: string) => Promise<User | null>
 }

@@ -36,13 +36,14 @@ export class AuthHttpClient implements AuthInterface {
       })
     return response.data as RefreshResponse
   }
-  async logout(access_token: string): Promise<void> {
+  async logout(access_token: string, refresh_token: string): Promise<void> {
     fetch(`${this.BASE_URL}/auth/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${access_token}`,
       },
+      body: JSON.stringify({ refresh_token: refresh_token }),
     }).catch((error) => {
       console.error("Network error:", error)
       throw error

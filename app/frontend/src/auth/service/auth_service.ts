@@ -65,8 +65,10 @@ class AuthService {
   }
 
   async logoutUser() {
-    const accessToken = this.getAccessToken()
-    await ApiClient.logout(accessToken ?? "")
+    await ApiClient.logout(
+      this.getAccessToken() ?? "",
+      this.getRefreshToken() ?? ""
+    )
     localStorage.clear()
   }
 
