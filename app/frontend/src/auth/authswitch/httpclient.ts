@@ -38,13 +38,13 @@ export class AuthHttpClient implements AuthInterface {
     return response.data as RefreshResponse
   }
   async logout(refresh_token: string): Promise<void> {
-    await AuthService.authorizedFetch<void>(
-      `${this.BASE_URL}/auth/logout`,
-      "POST",
-      {
-        refresh_token,
-      }
-    )
+    await fetch(`${this.BASE_URL}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refresh_token }),
+    })
   }
 
   async getLoggedUserInfo(): Promise<User> {
