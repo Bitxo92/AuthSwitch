@@ -90,7 +90,7 @@ export class AuthService {
       if (response.status === 401) {
         try {
           await authservice.refreshTokens()
-          console.log("Access token refreshed. Retrying the request...")
+
           return AuthService.authorizedFetch<T>(endpoint_url, method, body)
         } catch {
           await authservice.logoutUser()
@@ -99,9 +99,7 @@ export class AuthService {
       }
 
       const result = await response.json()
-      console.log(
-        "Request retried successfully after refreshing the access token."
-      )
+
       return result.data as T
     } catch (error) {
       console.error("Network Error:", error)
