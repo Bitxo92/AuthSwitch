@@ -23,12 +23,20 @@ export function HomePage() {
             <span className="text-sm text-gray-500">
               Status: {user?.is_active ? "Active" : "Inactive"}
             </span>
-            <div className="mt-2 flex w-full justify-center">
+            <div className="mt-2 flex w-full justify-center gap-2">
               <Button
                 className="hover:cursor-pointer hover:bg-red-600 hover:text-white"
                 onClick={logout}
               >
                 Logout
+              </Button>
+              <Button
+                className="hover:cursor-pointer hover:bg-red-600 hover:text-white"
+                onClick={() => {
+                  window.location.href = "/gestion-usuarios"
+                }}
+              >
+                Gestion Usuarios Page
               </Button>
             </div>
           </div>

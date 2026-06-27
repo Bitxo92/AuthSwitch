@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 import { useAuth } from "@/auth/context/auth_context"
+import { Page404 } from "@/components/placeholder/404_page"
 
 type ProtectedRouteProps = {
   requiredPermission?: string
@@ -24,7 +25,7 @@ export function ProtectedRoute({ requiredPermission }: ProtectedRouteProps) {
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location }} />
   } else if (requiredPermission && !hasRequiredPermission(requiredPermission)) {
-    return <div>Access denied</div>
+    return <Page404 />
   }
 
   return <Outlet />

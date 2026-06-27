@@ -5,6 +5,8 @@ import { Route } from "react-router-dom"
 import UnderConstruction from "@/components/placeholder/under_construction"
 import { HomePage } from "@/pages/home/page"
 import { Page404 } from "@/components/placeholder/404_page"
+import { PERMISSIONS } from "@/auth/rbac/permissions"
+import { GestionUsuariosPage } from "@/pages/gestion_usuarios/page"
 
 interface RouteConfig {
   path: string
@@ -26,6 +28,13 @@ const routes: RouteConfig[] = [
     element: <HomePage />,
     protected: true,
     enabled: true,
+  },
+  {
+    path: "/gestion-usuarios",
+    element: <GestionUsuariosPage />,
+    protected: true,
+    enabled: true,
+    permission: PERMISSIONS.GESTION_USUARIOS.ACCESS,
   },
   {
     path: "*",

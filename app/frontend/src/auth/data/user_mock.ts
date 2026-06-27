@@ -8,6 +8,6 @@ export const mockUserResponse: User = {
   email: "user@mail.com",
   is_active: true,
   roles: ["Administrator"],
-  permissions: [],
+  permissions: ["gestion_usuarios-access"],
   password_expiration: "2026-06-21T10:30:24.750Z",
 }
